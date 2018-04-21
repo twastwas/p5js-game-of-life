@@ -3,7 +3,7 @@ var grid;
 function setup () {
   createCanvas(400, 400);
   grid = new Grid(20);
-  
+  grid.randomize();
   /*example
   var x = 1;
   var y = -1;
@@ -31,14 +31,16 @@ class Grid {
     // update the contructor to take cellSize as a parameter
     // use cellSize to calculate and assign values for numberOfColumns and numberOfRows
 	this.cellSize = cellSize; //has to access it on this
-    this.numberOfColumns = width / cellSize;
-	this.numberOfRows = height / cellSize;
+    this.numberOfColumns = width / cellSize; //width = width of canvas
+	this.numberOfRows = height / cellSize; //height = height of canvas
 
+	//creating the grid
 	this.cells = new Array(this.numberOfColumns); // create the initial array
 	for (var i = 0; i < this.cells.length; i ++) { // loop over each position in the array
 	  this.cells[i] = new Array(this.numberOfRows); // create another array inside of the first array at position `i`
 	}	
 	
+	//creating the cells
 	for (var column = 0; column < this.numberOfColumns; column ++) {
 		for (var row = 0; row < this.numberOfRows; row++) {
 			this.cells[column][row] = new Cell(column, row, cellSize);
@@ -46,17 +48,25 @@ class Grid {
 		}
 	}
 	//print(this.cells);
-	print(this);
+	//print(this);
+  }
+
+  randomize() {
+	for (var column = 0; column < this.numberOfColumns; column ++) {
+      for (var row = 0; row < this.numberOfRows; row++) {
+		  var currentCell = this.cells[column][row];
+		  var randomNum = floor(random(2));
+		  currentCell.setIsAlive(randomNum);
+		}
+	}
   }
 
   draw () {
-    for (var column = 0; column < this.numberOfColumns; column ++) {
+    //go through each position to draw the cell
+	for (var column = 0; column < this.numberOfColumns; column ++) {
       for (var row = 0; row < this.numberOfRows; row++) {
-        //fill(240); 
-        //noStroke();
-        //rect(column * this.cellSize + 1, row * this.cellSize + 1, this.cellSize - 1, this.cellSize - 1);
       var currentCell = this.cells[column][row];
-	  
+
 	  currentCell.draw();
 	  //this.cells[column][row].draw();
 	  }
@@ -69,13 +79,13 @@ class Cell{
 		this.column = column;
 		this.row = row;
 		this.size = size;
-		this.isAlive = false; //we want this to keep updating
+		//this.isAlive = false; //we want this to keep updating...so I commented it out??
 	}
-	
+
 	draw () {
 		 if(this.isAlive == false) {
 			 fill(200,0,200); //neighbor
-		//print("hi");		
+			
 		}
 		 else {
 			 fill(240); //gray
@@ -92,11 +102,17 @@ class Cell{
 		//different color if alive or dead
 	}
 	
+	
 	setIsAlive(value) {
-	//value is initially a number...
-	//create number then call the method
-	//converting that number to a boolean
-	//work on this...
+		this.value = value; //OMGGG this was the problem?! XD
+		if(this.value == 1) {
+			this.isAlive = true;
+			//print("hi" + 1);	
+		}
+		else {
+			this.isAlive = false;
+			//print("bi" + 0);	
+		}
 	}
 	
 	//counting the neighbor
