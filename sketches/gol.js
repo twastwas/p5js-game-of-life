@@ -9,6 +9,7 @@ function setup () {
 function draw () {
   background(250);
   grid.updateNeighborCounts();
+  grid.updatePopulation();
   grid.draw();
 }
 
@@ -90,22 +91,26 @@ class Grid {
 	
 	
 		}
-        print(currentCell.liveNeighborCounts);
+       // print(currentCell.liveNeighborCounts);
 		currentCell.liveNeighborCounts = 0;
 	 }
    }
   }	
 	
-	
-  /*
-  
-    Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
-    Any live cell with two or three live neighbours lives on to the next generation.
-    Any live cell with more than three live neighbours dies, as if by overpopulation.
-    Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+  updatePopulation() {
+	  for (var column = 0; column < this.numberOfColumns; column ++) {
+		for (var row = 0; row < this.numberOfRows; row++) {
+		  
+        var currentCell = this.cells[column][row];
+		currentCell.liveOrDie;
+		print(this.cells[0][0].isAlive);
+	  }
+	 }
+	  	
 
-  */
   
+	  
+  }
 
 
   draw () {
@@ -165,4 +170,41 @@ class Cell{
 			//print("bi" + 0);	
 		}
 	}
+	
+	liveOrDie() {
+		
+		  /*
+  
+    Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
+    Any live cell with two or three live neighbours lives on to the next generation.
+    Any live cell with more than three live neighbours dies, as if by overpopulation.
+    Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+
+  */
+ 		var livenext = false;
+		var dienext = false;
+		var bornnext = true;
+	if(this.isAlive == true) {
+		bornnext = false;
+	}
+	else if (neighborCount < 2 || neighborCount > 3) {
+		dienext = true;
+	}
+	else {
+		livenext = true;
+	}
+	
+	if(dienext == true) {
+		this.isAlive = false;
+	}
+	else {
+		this.isAlive = true;
+	}
+  }
+	//counting the neighbor
+	//8 neighbors... squares - itself
+	
+	//3 neighbors don't exist =  only 5 neighbors
+	
+	//if else statement
 }
