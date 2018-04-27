@@ -8,6 +8,7 @@ function setup () {
 
 function draw () {
   background(250);
+  grid.updateNeighborCounts();
   grid.draw();
 }
 
@@ -50,43 +51,52 @@ class Grid {
   // reset it's neighbor count to 0
   // for each of the cell's neighbors, if it is alive add 1 to neighborCount
 	
-	for (var xOffset = -1; xOffset <= 1; xOffset++) {
-	  for (var yOffset = -1; yOffset <= 1; yOffset++) {
-		var neighborX = currentCell.column + xOffset
-		var neighborY = currentCell.row + yOffset
-		// do something with neighborX and neighborY
-		if(neighborX >= 0 && neighborX < this.cells.length && neighborY >= 0 && neighborY < this.cells.length) {
-		//if x and y position of neighbor is greater than 0 or less than cells length (so length is 20 but the it COUNTS 0-19), check it
-			//something = this.cells[neighborX][neighborY];
-			neighborX = 0;
-			neighborY = 0;
-			//keep working tomorrow after sleep
+	
+	for (var column = 0; column < this.numberOfColumns; column ++) {
+      for (var row = 0; row < this.numberOfRows; row++) {
+		  
+        var currentCell = this.cells[column][row];
+      
+        
+          for (var xOffset = -1; xOffset <= 1; xOffset++) {
+            for (var yOffset = -1; yOffset <= 1; yOffset++) {
+              var neighborX = currentCell.column + xOffset; //0
+              var neighborY = currentCell.row + yOffset; //0
+			  
+                var amongtheliving = false;
+			  if(neighborX < 0 || neighborX >= this.numberOfColumns) {
+				neighborX = null;
+			  }
+              if(neighborY < 0 || neighborY >= this.numberOfRows) {
+				neighborY = null;
+			  }
+              if(currentCell.column == xOffset && currentCell.row == yOffset) {
+              	neighborX = null;
+                neighborY = null;
+              }
+              
+              // do something with neighborX and neighborY
+                if(neighborX != null && neighborY != null) {
+                //if x and y position of neighbor is greater than 0 or less than cells length (so length is 20 but the it COUNTS 0-19), check it
+				  amongtheliving = this.cells[neighborX][neighborY].isAlive;
+                }
+              //if x or y position of neighbor is less than 0 or greater than cells length, skip it cause it's not part of the grid 	
+              
+              	if(amongtheliving == true) {
+                  currentCell.liveNeighborCounts++;
+                }
+                
+            }
+	
+	
 		}
-		else {
-		//if x or y position of neighbor is less than 0 or greater than cells length, skip it cause it's not part of the grid 	
-		}
-		
-		
-		  /*example
-  var x = 1;
-  var y = -1;
-  var sampleArray = [[0,0],[1,1]];
-
-  if (x >= 0 && x < sampleArray.length) {
-  //print(sampleArray[x][y]);
-  //do the same for y values
-  } else {
-	print("bad value"); //skip that cell
-  }
-  */
-
-  //print(sampleArray[0][-1]);//[0,0], print(undefined)
-  //print(sampleArray[-1][0]);//print(undefined[0]);
-		print(currentCell.liveNeighborCounts);
-	  }
-	}
-  
-  
+        print(currentCell.liveNeighborCounts);
+		currentCell.liveNeighborCounts = 0;
+	 }
+   }
+  }	
+	
+	
   /*
   
     Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
@@ -96,7 +106,7 @@ class Grid {
 
   */
   
-  }
+
 
   draw () {
     //go through each position to draw the cell
@@ -145,7 +155,7 @@ class Cell{
 	
 	
 	setIsAlive(value) {
-		this.value = value; //OMGGG this was the problem?! XD...heard this wasn't necessary...hmm
+		this.value = value; //OMGGG this was the problem?! XD
 		if(this.value == 1) {
 			this.isAlive = true;
 			//print("hi" + 1);	
@@ -155,11 +165,4 @@ class Cell{
 			//print("bi" + 0);	
 		}
 	}
-	
-	//counting the neighbor
-	//8 neighbors... squares - itself
-	
-	//3 neighbors don't exist =  only 5 neighbors
-	
-	//if else statement
 }
