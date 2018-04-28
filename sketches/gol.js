@@ -2,13 +2,13 @@ var grid;
 
 function setup () {
 	createCanvas(400, 400);
-	grid = new Grid(5);
-	//grid.randomize();
+	grid = new Grid(20);
+	grid.randomize();
 }
 
 function draw () {
-	grid.randomize();
 	background(250);
+	//grid.randomize();
 	grid.updateNeighborCounts();
 	grid.updatePopulation();
 	grid.draw();
@@ -26,7 +26,7 @@ class Grid {
 		this.cells = new Array(this.numberOfColumns); // create the initial array
 		for (var i = 0; i < this.cells.length; i ++) { // loop over each position in the array
 			this.cells[i] = new Array(this.numberOfRows); // create another array inside of the first array at position `i`
-		}	
+		}
 
 		//creating the cells
 		for (var column = 0; column < this.numberOfColumns; column ++) {
@@ -43,15 +43,16 @@ class Grid {
 			for (var row = 0; row < this.numberOfRows; row++) {
 				var currentCell = this.cells[column][row];
 				var randomNum = floor(random(2));
+				//print(randomNum); //always alternating 0 and 1..?? no the same values are just wrapped up together and the amount of the same values are listed in the value circled in blue
 				currentCell.setIsAlive(randomNum);
 			}
 		}
 	}
 
-	updateNeighborCounts() {
 	// for each cell in the grid
 	// reset it's neighbor count to 0
 	// for each of the cell's neighbors, if it is alive add 1 to neighborCount
+	updateNeighborCounts() {
 		for (var column = 0; column < this.numberOfColumns; column ++) {
 			for (var row = 0; row < this.numberOfRows; row++) {	  
 				var currentCell = this.cells[column][row];
@@ -87,7 +88,7 @@ class Grid {
 			}
 		}
 	}	
-	
+
 	updatePopulation() {
 		for (var column = 0; column < this.numberOfColumns; column ++) {
 			for (var row = 0; row < this.numberOfRows; row++) {
@@ -105,6 +106,8 @@ class Grid {
 				var currentCell = this.cells[column][row];
 				currentCell.draw();
 				//this.cells[column][row].draw();
+				//print(this.cells[0][1].liveNeighborCounts);
+				//check the value to make sure it's actually doing what it needs to do
 			}
 		}
 	} 
@@ -132,10 +135,11 @@ class Cell{
 		//print(this.cellSize); //this results in the window trying to print
         rect(this.column * this.size + 1, this.row * this.size + 1, this.size - 1, this.size - 1);
 	}
-	
+
 	setIsAlive(value) {
-		this.value = value; //OMGGG this was the problem?! XD
-		if(this.value == 1) {
+		//this.value = value; //OMGGG this was the problem?! XD
+		//commented above out and got rid of this.value below cause Cell isn't supposed to have that as a parameter
+		if(value == 1) {
 			this.isAlive = true;
 			//print("hi" + 1);	
 		}
@@ -143,8 +147,9 @@ class Cell{
 			this.isAlive = false;
 			//print("bi" + 0);	
 		}
+		//print(this.value);
 	}
-	
+
 	/*
     Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
     Any live cell with two or three live neighbours lives on to the next generation.
@@ -152,9 +157,8 @@ class Cell{
     Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
     */
 	liveOrDie() {
- 		var livenext = false;
-		var dienext = false;
-		var bornnext = true;
+ 		var number = 0;
+		/*
 		if(this.isAlive == true) {
 			bornnext = false;
 		}
@@ -164,11 +168,29 @@ class Cell{
 		else {
 			livenext = true;
 		}
-		if(dienext == true) {
-			this.isAlive = false;
+		*/
+	
+		if(this.isAlive == false && this.liveNeighborCounts == 3) {
+			number = 1;
+			
+		}
+		else if(this.isAlive == true && (this.liveNeighborCounts < 2 || this.liveNeighborCounts > 3)) {
+			number = -1;
 		}
 		else {
+			number = 0;
+		}
+		print(this);
+		//print(number);
+		
+		/* DO NOT UNCOMMENT - hurts eyes
+		if(number == 1 || number == 0) {
 			this.isAlive = true;
 		}
+		else {
+			this.isAlive = false;
+		}*/ 
+		
+		
 	}
 }
