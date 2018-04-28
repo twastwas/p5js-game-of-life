@@ -2,7 +2,7 @@ var grid;
 
 function setup () {
 	createCanvas(400, 400);
-	grid = new Grid(20);
+	grid = new Grid(5);
 	//grid.randomize();
 }
 
