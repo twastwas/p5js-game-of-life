@@ -186,12 +186,15 @@ class Cell{
 		//print(this);
 		//print(number);
 		
-		/* DO NOT UNCOMMENT - hurts eyes
-		if(number == 1 || number == 0) {
+		
+		if(number == 1) {
 			this.isAlive = true;
 		}
-		else {
+		else if(number == 0) {
 			this.isAlive = false;
-		}*/ 
+		} 
+		else {
+			//do nothing
+		}
 	}
 }
