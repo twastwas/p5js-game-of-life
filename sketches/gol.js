@@ -2,6 +2,7 @@ var grid;
 
 function setup () {
 	createCanvas(400, 400);
+	frameRate(1);
 	grid = new Grid(20);
 	grid.randomize();
 }
