@@ -9,7 +9,7 @@ function setup () {
 
 function draw () {
 	background(250);
-	grid.randomize();
+	//grid.randomize();
 	grid.updateNeighborCounts();
 	grid.updatePopulation();
 	grid.draw();
