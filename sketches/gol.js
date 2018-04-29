@@ -1,14 +1,14 @@
 var grid;
 
 function setup () {
-	createCanvas(400, 400);
-	grid = new Grid(20);
+	createCanvas(200, 200);
+	grid = new Grid(5);
 	grid.randomize();
 }
 
 function draw () {
 	background(250);
-	//grid.randomize();
+	grid.randomize();
 	grid.updateNeighborCounts();
 	grid.updatePopulation();
 	grid.draw();
@@ -70,7 +70,8 @@ class Grid {
 						if(neighborY < 0 || neighborY >= this.numberOfRows) {
 							neighborY = null;
 						}
-						if(currentCell.column == xOffset && currentCell.row == yOffset) {
+						if(currentCell.column == neighborX && currentCell.row == neighborY) {
+							//changed from offsetx and y to neighborx and y
 							neighborX = null;
 							neighborY = null;
 						}
@@ -94,7 +95,8 @@ class Grid {
 			for (var row = 0; row < this.numberOfRows; row++) {
 				var currentCell = this.cells[column][row];
 				currentCell.liveOrDie();
-		//	print(this.cells[0][0].isAlive);
+			print(this.cells[0][1].liveNeighborCounts);
+			//off by one because it's maybe counting itself?
 			}
 		}  
 	}
@@ -151,11 +153,11 @@ class Cell{
 	}
 
 	/*
-    Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
-    Any live cell with two or three live neighbours lives on to the next generation.
-    Any live cell with more than three live neighbours dies, as if by overpopulation.
-    Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
-    */
+	Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
+	Any live cell with two or three live neighbours lives on to the next generation.
+	Any live cell with more than three live neighbours dies, as if by overpopulation.
+	Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+	*/
 	liveOrDie() {
  		var number = 0;
 		/*
@@ -180,7 +182,7 @@ class Cell{
 		else {
 			number = 0;
 		}
-		print(this);
+		//print(this);
 		//print(number);
 		
 		/* DO NOT UNCOMMENT - hurts eyes
@@ -190,7 +192,5 @@ class Cell{
 		else {
 			this.isAlive = false;
 		}*/ 
-		
-		
 	}
 }
